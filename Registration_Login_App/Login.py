@@ -4,6 +4,29 @@ from flask_restful import Api,Resource
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 #pip install flask-migrate
+import os
+
+class Config:
+    SQLALCHEMY_DATABASE_URI='postgresql+psycopg2://root:1234@localhost/regis_login_db'
+
+class Development_Config(Config):
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://root:1234@localhost/regis_login_db'
+
+
+class Production_Config(Config):
+    uri=os.environ.get("DATABASE_URL")
+    if uri and uri.startswith("postgres://"):
+        uri = uri.replace("postgres://", "postgresql://", 1)
+
+    SQLALCHEMY_DATABASE_URI = uri
+
+
+env = os.environ.get("ENV","Development")
+
+if env == "Production":
+    config_str=Production_Config
+else:
+    config_str=Development_Config
 
 
 app= Flask(__name__)
@@ -88,4 +111,26 @@ if __name__=="__main__":
 #2. go to terminal  -- heroku login
 #type any key for forward and login
 #3.git init
-#4.
+#4.git add .
+# git status
+# git remote add origin bhaskar-registrationlogin
+# git commit -m "added new registration"
+# git push heroku master
+
+
+                    ## ssh keys
+# go to Terminal and type
+#ssh-keygen -t rsa -b 4096 -C "lellabhaskar@gmail.com"
+#ls -l ~/.ssh
+
+# got to gitbash and type
+#eval $(ssh-agent -s)
+#ssh-add      ~/.ssh/id_rsa
+
+#cat ~/.ssh/id_rsa.pub
+
+#go to git and settings --SSH and GPH Keys
+# add New SSH Key -- Title and paste key from gitbash using cat command
+
+# ssh -T git@github.com
+# and type yes and enter
